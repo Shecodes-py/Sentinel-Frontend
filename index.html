@@ -1,719 +1,490 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Sentinel — Personalization is Security</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentinel — Adaptive Friction for Union Bank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#0B2942;         /* deep corporate navy */
-    --teal:#0E5C56;        /* primary brand teal */
-    --teal-dim:#0E5C5622;
-    --sky:#3E7CB1;         /* secondary accent */
-    --emerald:#1F9D6B;     /* frictionless / success */
-    --emerald-dim:#1F9D6B18;
-    --amber:#DE8A34;       /* protective shield, never red */
-    --amber-dim:#DE8A3420;
-    --paper:#F6F3EC;       /* warm cream background */
-    --paper-raised:#FFFFFF;
-    --line:#E4DFD3;
-    --ink-soft:#3B4A57;
-    --ink-faint:#7A8894;
-    --radius:18px;
-    --shadow:0 8px 30px -10px rgba(11,41,66,0.18);
-    font-size:17px;
+    --bg:#F6F4EE;
+    --surface:#FFFFFF;
+    --ink:#14211F;
+    --ink-soft:#52645F;
+    --ink-faint:#8A968F;
+    --line:#DEDCD1;
+    --teal-900:#0D2E2C;
+    --teal-700:#14514C;
+    --teal-500:#1F7A70;
+    --mint:#E8F3EE;
+    --mint-line:#C9E1D8;
+    --amber-700:#8A5A1E;
+    --amber-500:#C9862F;
+    --amber-bg:#FBF0DE;
+    --amber-line:#E9CB98;
   }
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
   body{
-    background:var(--paper);
+    margin:0;
+    background:var(--bg);
     color:var(--ink);
-    font-family:'Inter',system-ui,sans-serif;
-    line-height:1.5;
+    font-family:'Inter',sans-serif;
     -webkit-font-smoothing:antialiased;
-    min-height:100vh;
   }
-  .display{font-family:'Fraunces',serif;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  .serif{font-family:'Fraunces',serif;}
   .mono{font-family:'IBM Plex Mono',monospace;}
-  button{font-family:inherit;cursor:pointer;}
-  input,textarea,select{font-family:inherit;}
   a{color:inherit;}
 
-  /* ---------- Shell ---------- */
-  .app-shell{max-width:920px;margin:0 auto;padding:0 20px 120px;}
-  header.topbar{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:22px 0 16px;position:sticky;top:0;background:var(--paper);z-index:20;
+  /* ---------- nav ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(246,244,238,0.9);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
   }
-  .brand{display:flex;align-items:center;gap:12px;}
-  .brand-mark{position:relative;width:38px;height:38px;flex:none;}
-  .brand-name{font-size:21px;font-weight:600;letter-spacing:-0.01em;}
-  .brand-sub{font-size:12.5px;color:var(--ink-faint);margin-top:-2px;}
-
-  nav.tabs{display:flex;gap:4px;background:var(--paper-raised);border:1px solid var(--line);
-    border-radius:999px;padding:4px;box-shadow:var(--shadow);}
-  nav.tabs button{
-    border:none;background:transparent;padding:9px 16px;border-radius:999px;
-    font-size:14.5px;font-weight:600;color:var(--ink-faint);transition:.18s;white-space:nowrap;
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;}
+  .brand{display:flex;align-items:center;gap:8px;}
+  .brand-badge{
+    width:32px;height:32px;border-radius:50%;
+    background:var(--teal-900);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
   }
-  nav.tabs button.active{background:var(--ink);color:#fff;}
-  nav.tabs button:not(.active):hover{color:var(--ink);}
-
-  /* ---------- Trust ring (signature element) ---------- */
-  .trust-ring{position:relative;width:38px;height:38px;}
-  .trust-ring svg{transform:rotate(-90deg);}
-  .trust-ring circle{fill:none;stroke-width:4;}
-  .trust-ring .track{stroke:var(--line);}
-  .trust-ring .fill{stroke:var(--emerald);stroke-linecap:round;transition:stroke-dashoffset .6s ease, stroke .4s ease;}
-  .trust-ring.alert .fill{stroke:var(--amber);}
-  .trust-ring .dot{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-    font-size:14px;}
-
-  /* ---------- Views ---------- */
-  section.view{display:none;animation:fadein .35s ease;}
-  section.view.active{display:block;}
-  @keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-
-  .card{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);
-    box-shadow:var(--shadow);padding:24px;}
-
-  /* Dashboard */
-  .balance-card{background:linear-gradient(135deg,var(--ink) 0%,#123B57 100%);color:#fff;
-    border-radius:var(--radius);padding:28px 26px;position:relative;overflow:hidden;}
-  .balance-card::after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;
-    border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.08),transparent 70%);}
-  .balance-label{font-size:13px;color:#B9C9D6;text-transform:uppercase;letter-spacing:.08em;}
-  .balance-amount{font-family:'Fraunces',serif;font-size:42px;font-weight:500;margin:6px 0 18px;}
-  .balance-actions{display:flex;gap:10px;}
-  .btn{border:none;border-radius:12px;padding:12px 18px;font-weight:600;font-size:14.5px;transition:.15s;}
-  .btn-primary{background:var(--emerald);color:#fff;}
-  .btn-primary:hover{background:#188457;}
-  .btn-light{background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.25);}
-  .btn-light:hover{background:rgba(255,255,255,0.2);}
-  .btn-ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--line);}
-  .btn-ghost:hover{background:#00000006;}
-  .btn-amber{background:var(--amber);color:#fff;}
-  .btn-amber:hover{background:#c9772a;}
-  .btn-outline-amber{background:transparent;color:var(--amber);border:1.5px solid var(--amber);}
-
-  .section-title{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-faint);
-    margin:30px 0 12px;font-weight:600;}
-  .tx-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;
-    border-bottom:1px solid var(--line);}
-  .tx-row:last-child{border-bottom:none;}
-  .tx-left{display:flex;align-items:center;gap:12px;}
-  .tx-icon{width:38px;height:38px;border-radius:11px;background:var(--paper);display:flex;
-    align-items:center;justify-content:center;font-size:17px;flex:none;}
-  .tx-name{font-weight:600;font-size:15px;}
-  .tx-meta{font-size:12.5px;color:var(--ink-faint);margin-top:1px;}
-  .tx-amt{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:15px;}
-  .status-pill{font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;margin-left:8px;}
-  .status-Success{background:var(--emerald-dim);color:var(--emerald);}
-  .status-Held{background:var(--amber-dim);color:var(--amber);}
-  .status-Failed{background:#00000010;color:var(--ink-faint);}
-
-  /* Modal (Send Money) */
-  .modal-backdrop{position:fixed;inset:0;background:rgba(11,41,66,0.45);backdrop-filter:blur(2px);
-    display:none;align-items:flex-end;justify-content:center;z-index:100;}
-  .modal-backdrop.open{display:flex;}
-  @media(min-width:640px){.modal-backdrop{align-items:center;}}
-  .modal{background:var(--paper-raised);width:100%;max-width:440px;border-radius:22px 22px 0 0;
-    padding:26px 24px 30px;box-shadow:0 -10px 40px rgba(0,0,0,0.2);animation:slideup .28s ease;}
-  @media(min-width:640px){.modal{border-radius:22px;animation:none;}}
-  @keyframes slideup{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-  .field{margin-bottom:16px;}
-  .field label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:6px;}
-  .field input,.field select{width:100%;padding:12px 14px;border:1.5px solid var(--line);
-    border-radius:11px;font-size:15.5px;background:var(--paper);}
-  .field input:focus,.field select:focus,textarea:focus{outline:none;border-color:var(--sky);}
-  .modal-title{font-family:'Fraunces',serif;font-size:22px;margin:0 0 4px;}
-  .modal-sub{font-size:13.5px;color:var(--ink-faint);margin-bottom:20px;}
-
-  /* Success screen — zero friction */
-  .success-screen{text-align:center;padding:34px 10px 10px;}
-  .success-badge{width:64px;height:64px;border-radius:50%;background:var(--emerald-dim);
-    display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 16px;
-    color:var(--emerald);}
-  .success-screen h3{font-family:'Fraunces',serif;font-size:22px;margin:0 0 6px;}
-  .success-screen p{color:var(--ink-faint);font-size:14.5px;margin:0 0 20px;}
-
-  /* Shield overlay (View B) */
-  .shield-backdrop{position:fixed;inset:0;background:rgba(11,41,66,0.55);display:none;
-    align-items:center;justify-content:center;z-index:150;padding:20px;}
-  .shield-backdrop.open{display:flex;}
-  .shield-panel{background:var(--paper-raised);max-width:460px;width:100%;border-radius:24px;
-    padding:30px 28px;border:1.5px solid var(--amber);box-shadow:0 20px 60px -15px rgba(222,138,52,0.35);}
-  .shield-icon{width:56px;height:56px;border-radius:16px;background:var(--amber-dim);color:var(--amber);
-    display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:16px;}
-  .shield-panel h2{font-family:'Fraunces',serif;font-size:23px;margin:0 0 12px;line-height:1.25;}
-  .shield-msg{background:var(--paper);border-radius:14px;padding:16px 18px;font-size:15.5px;
-    color:var(--ink-soft);margin-bottom:20px;border:1px solid var(--line);}
-  .shield-flags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px;}
-  .shield-flags span{font-size:11.5px;background:var(--amber-dim);color:var(--amber);padding:4px 10px;
-    border-radius:999px;font-weight:600;}
-  .shield-actions{display:flex;flex-direction:column;gap:10px;}
-  .shield-actions .btn{padding:14px;font-size:15px;}
-  .resolution{text-align:center;padding:6px 4px 2px;}
-  .resolution .icon{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;
-    justify-content:center;font-size:28px;margin:0 auto 14px;}
-
-  /* Scam check (View C) */
-  .scam-textarea{width:100%;min-height:150px;border:1.5px solid var(--line);border-radius:16px;
-    padding:16px;font-size:15px;resize:vertical;background:var(--paper-raised);}
-  .risk-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;
-    font-weight:700;font-size:14px;margin-bottom:18px;}
-  .risk-High{background:var(--amber-dim);color:var(--amber);}
-  .risk-Medium{background:#3E7CB122;color:var(--sky);}
-  .risk-Low{background:var(--emerald-dim);color:var(--emerald);}
-  .tactic{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);}
-  .tactic:last-child{border-bottom:none;}
-  .tactic .warn{font-size:18px;flex:none;}
-  .tactic h4{margin:0 0 3px;font-size:15px;}
-  .tactic p{margin:0;font-size:13.5px;color:var(--ink-faint);}
-  .action-plan{background:var(--paper);border-radius:14px;padding:16px 18px;margin-top:16px;}
-  .action-plan h4{margin:0 0 10px;font-size:13.5px;text-transform:uppercase;letter-spacing:.06em;
-    color:var(--ink-faint);}
-  .action-plan ul{margin:0;padding-left:20px;font-size:14.5px;}
-  .action-plan li{margin-bottom:6px;}
-
-  /* Trust panel (View D) */
-  .trust-card{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
-    padding:18px 0;border-bottom:1px solid var(--line);}
-  .trust-card:last-child{border-bottom:none;}
-  .trust-left{display:flex;gap:14px;}
-  .trust-icon{font-size:22px;flex:none;margin-top:2px;}
-  .trust-label{font-size:12.5px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.05em;
-    margin-bottom:4px;}
-  .trust-value{font-family:'IBM Plex Mono',monospace;font-size:15px;}
-  .trust-value input{font-family:'IBM Plex Mono',monospace;font-size:14px;padding:8px 10px;
-    border:1.5px solid var(--sky);border-radius:8px;width:100%;max-width:260px;}
-  .trust-actions{display:flex;gap:6px;flex:none;}
-  .icon-btn{border:1px solid var(--line);background:var(--paper-raised);border-radius:9px;
-    width:34px;height:34px;font-size:14px;display:flex;align-items:center;justify-content:center;}
-  .icon-btn:hover{background:var(--paper);}
-  .icon-btn.danger:hover{background:var(--amber-dim);border-color:var(--amber);color:var(--amber);}
-
-  /* Demo control panel (judges/team only) */
-  .demo-panel{position:fixed;bottom:18px;right:18px;background:var(--ink);color:#fff;
-    border-radius:16px;padding:14px 16px;box-shadow:0 12px 34px rgba(0,0,0,0.35);z-index:200;
-    width:230px;font-size:13px;}
-  .demo-panel .dp-title{font-weight:700;font-size:12.5px;display:flex;align-items:center;gap:6px;
-    margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em;color:#9FD4C6;}
-  .demo-panel button{width:100%;text-align:left;background:rgba(255,255,255,0.06);
-    border:1px solid rgba(255,255,255,0.14);color:#fff;padding:10px 12px;border-radius:10px;
-    margin-bottom:8px;font-size:13px;font-weight:600;}
-  .demo-panel button:hover{background:rgba(255,255,255,0.14);}
-  .demo-panel button:last-child{margin-bottom:0;}
-  .demo-panel .dp-tag{font-size:10.5px;color:#7E94A3;margin-top:8px;line-height:1.4;}
-  .demo-panel.collapsed .dp-body{display:none;}
-  .dp-toggle{position:absolute;top:10px;right:12px;background:none;border:none;color:#7E94A3;
-    font-size:12px;width:auto;padding:0;margin:0;}
-
-  .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;
-    padding:12px 20px;border-radius:12px;font-size:14px;font-weight:600;z-index:300;opacity:0;
-    pointer-events:none;transition:.25s;box-shadow:0 10px 30px rgba(0,0,0,.25);}
-  .toast.show{opacity:1;transform:translateX(-50%) translateY(6px);}
-
-  .empty-note{color:var(--ink-faint);font-size:14px;padding:20px 0;text-align:center;}
-  @media(max-width:560px){
-    nav.tabs button{padding:8px 12px;font-size:13.5px;}
-    .demo-panel{width:190px;right:12px;bottom:12px;}
+  .brand-name{font-family:'Fraunces',serif;font-weight:600;font-size:1.15rem;}
+  .brand-tag{
+    font-size:10px;letter-spacing:0.06em;font-weight:600;
+    background:var(--mint);color:var(--teal-700);
+    padding:3px 8px;border-radius:999px;margin-left:2px;
   }
+  .nav-links{display:none;gap:28px;font-size:14px;font-weight:500;color:var(--ink-soft);}
+  @media(min-width:760px){.nav-links{display:flex;}}
+  .nav-links a{text-decoration:none;}
+  .nav-links a:hover{color:var(--teal-700);}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:11px 22px;border-radius:999px;
+    font-size:14px;font-weight:600;
+    border:none;cursor:pointer;text-decoration:none;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn-primary{background:var(--teal-900);color:var(--bg);}
+  .btn-primary:hover{box-shadow:0 8px 20px rgba(13,46,44,0.25);}
+  .btn-ghost{background:transparent;color:var(--teal-900);border:1px solid var(--line);}
+
+  /* ---------- hero ---------- */
+  .hero{padding:76px 0 40px;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;
+    color:var(--teal-700);background:var(--mint);
+    padding:6px 14px;border-radius:999px;border:1px solid var(--mint-line);
+  }
+  .hero h1{
+    font-size:clamp(2.3rem,5vw,3.6rem);
+    line-height:1.08;
+    font-weight:600;
+    margin:22px 0 20px;
+    max-width:760px;
+    letter-spacing:-0.01em;
+  }
+  .hero h1 em{font-style:italic;color:var(--teal-700);}
+  .hero p.lede{
+    font-size:1.15rem;line-height:1.6;color:var(--ink-soft);
+    max-width:560px;margin:0 0 32px;
+  }
+  .hero-cta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;}
+  .hero-note{font-size:13px;color:var(--ink-faint);margin-top:14px;}
+
+  /* live demo strip inside hero */
+  .demo-strip{
+    margin-top:56px;
+    border-radius:24px;
+    background:var(--teal-900);
+    color:var(--bg);
+    padding:28px;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:20px;
+    position:relative;
+    overflow:hidden;
+  }
+  @media(min-width:760px){.demo-strip{grid-template-columns:1.1fr 1fr;padding:36px;}}
+  .demo-strip::after{
+    content:"";position:absolute;right:-60px;bottom:-60px;
+    width:220px;height:220px;border-radius:50%;
+    background:radial-gradient(circle, rgba(31,122,112,0.35), transparent 70%);
+  }
+  .demo-col{position:relative;z-index:1;}
+  .demo-label{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#9FC2BB;font-weight:600;}
+  .demo-row{
+    margin-top:12px;background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:14px;padding:14px 16px;
+    font-size:14px;
+  }
+  .demo-row .amt{font-family:'IBM Plex Mono',monospace;font-size:1.15rem;font-weight:500;}
+  .tag-ok{
+    display:inline-block;margin-top:8px;font-size:11px;font-weight:600;
+    background:rgba(31,122,112,0.25);color:#B9E4D8;padding:3px 10px;border-radius:999px;
+  }
+  .tag-held{
+    display:inline-block;margin-top:8px;font-size:11px;font-weight:600;
+    background:rgba(201,134,47,0.25);color:#F3D6A0;padding:3px 10px;border-radius:999px;
+  }
+
+  /* ---------- section shell ---------- */
+  section{padding:64px 0;}
+  .section-head{max-width:620px;margin-bottom:44px;}
+  .kicker{
+    font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;
+    color:var(--amber-700);margin-bottom:12px;
+  }
+  h2.section-title{
+    font-family:'Fraunces',serif;font-weight:600;
+    font-size:clamp(1.7rem,3vw,2.3rem);line-height:1.15;margin:0 0 12px;
+  }
+  .section-sub{color:var(--ink-soft);font-size:1.02rem;line-height:1.6;}
+
+  /* ---------- problem stats ---------- */
+  .stat-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:16px;
+  }
+  @media(min-width:760px){.stat-grid{grid-template-columns:repeat(4,1fr);}}
+  .stat-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:18px;
+    padding:22px 20px;
+  }
+  .stat-num{font-family:'Fraunces',serif;font-weight:600;font-size:2rem;color:var(--teal-900);}
+  .stat-label{font-size:13px;color:var(--ink-soft);margin-top:6px;line-height:1.4;}
+
+  /* ---------- adaptive friction diagram ---------- */
+  .friction-band{
+    display:flex;flex-direction:column;border-radius:22px;overflow:hidden;
+    border:1px solid var(--line);
+  }
+  @media(min-width:760px){.friction-band{flex-direction:row;}}
+  .friction-half{flex:1;padding:32px 28px;}
+  .friction-half.calm{background:var(--mint);}
+  .friction-half.alert{background:var(--amber-bg);}
+  .friction-icon{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+  .friction-icon.calm{background:var(--teal-700);}
+  .friction-icon.alert{background:var(--amber-500);}
+  .friction-half h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.25rem;margin:0 0 8px;}
+  .friction-half p{color:var(--ink-soft);font-size:14.5px;line-height:1.6;margin:0;}
+  .friction-divider{
+    display:flex;align-items:center;justify-content:center;
+    background:var(--surface);
+    padding:14px;
+  }
+  @media(min-width:760px){.friction-divider{padding:0 18px;}}
+  .friction-divider span{
+    font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;
+    color:var(--ink-faint);white-space:nowrap;
+  }
+
+  /* ---------- how it works / cards ---------- */
+  .feature-grid{display:grid;grid-template-columns:1fr;gap:18px;}
+  @media(min-width:640px){.feature-grid{grid-template-columns:repeat(2,1fr);}}
+  .feature-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:20px;
+    padding:26px;position:relative;
+  }
+  .feature-index{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-faint);
+    margin-bottom:14px;
+  }
+  .feature-icon{
+    width:40px;height:40px;border-radius:12px;
+    background:var(--mint);color:var(--teal-700);
+    display:flex;align-items:center;justify-content:center;margin-bottom:16px;
+  }
+  .feature-card h3{font-size:1.05rem;font-weight:700;margin:0 0 8px;}
+  .feature-card p{color:var(--ink-soft);font-size:14px;line-height:1.6;margin:0;}
+  .feature-card .example{
+    margin-top:14px;padding:12px 14px;border-radius:12px;
+    background:var(--bg);border:1px solid var(--line);
+    font-size:13px;color:var(--ink-soft);font-style:italic;
+  }
+
+  /* ---------- flow / journey ---------- */
+  .flow{position:relative;padding-left:28px;border-left:2px dashed var(--line);}
+  .flow-step{position:relative;padding-bottom:36px;}
+  .flow-step:last-child{padding-bottom:0;}
+  .flow-dot{
+    position:absolute;left:-35.5px;top:2px;
+    width:16px;height:16px;border-radius:50%;
+    background:var(--teal-900);border:3px solid var(--bg);
+  }
+  .flow-step h4{font-size:1rem;font-weight:700;margin:0 0 6px;}
+  .flow-step p{color:var(--ink-soft);font-size:14px;line-height:1.6;margin:0;max-width:480px;}
+  .flow-time{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-faint);margin-bottom:4px;display:block;}
+
+  /* ---------- trust callout ---------- */
+  .trust-band{
+    border-radius:24px;background:var(--surface);border:1px solid var(--line);
+    padding:36px;display:grid;grid-template-columns:1fr;gap:28px;
+  }
+  @media(min-width:760px){.trust-band{grid-template-columns:1fr 1fr;padding:44px;}}
+  .trust-chip{
+    display:flex;align-items:center;gap:10px;
+    background:var(--bg);border:1px solid var(--line);
+    border-radius:14px;padding:12px 14px;font-size:13.5px;margin-top:10px;
+  }
+
+  /* ---------- CTA / footer ---------- */
+  .cta-band{
+    border-radius:26px;background:var(--teal-900);color:var(--bg);
+    padding:52px 36px;text-align:center;
+  }
+  .cta-band h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(1.6rem,3vw,2.1rem);margin:0 0 12px;}
+  .cta-band p{color:#B9CFC9;max-width:480px;margin:0 auto 28px;font-size:1rem;line-height:1.6;}
+  footer{padding:36px 0 60px;color:var(--ink-faint);font-size:13px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;border-top:1px solid var(--line);margin-top:20px;}
 </style>
 </head>
 <body>
 
-<div class="app-shell">
-  <header class="topbar">
+<header>
+  <div class="wrap nav">
     <div class="brand">
-      <div class="brand-mark">
-        <div class="trust-ring" id="headerRing">
-          <svg width="38" height="38" viewBox="0 0 38 38">
-            <circle class="track" cx="19" cy="19" r="16"></circle>
-            <circle class="fill" id="headerRingFill" cx="19" cy="19" r="16"
-              stroke-dasharray="100.5" stroke-dashoffset="90"></circle>
-          </svg>
-          <div class="dot">🛡️</div>
+      <div class="brand-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3z" stroke="#E8F3EE" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#E8F3EE" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="brand-name">Sentinel</span>
+      <span class="brand-tag">UNION BANK × ECX</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#problem">The Problem</a>
+      <a href="#solution">Adaptive Friction</a>
+      <a href="#how">How it Works</a>
+      <a href="#trust">Trust</a>
+    </nav>
+    <a href="dashboard.html" class="btn btn-primary">See the demo</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- HERO -->
+  <section class="hero" style="padding-bottom:0;">
+    <span class="eyebrow">HackX 6.0 · Fraud Defense Track</span>
+    <h1>Security that's <em>invisible</em> until the moment it needs to be <em>unmistakable</em>.</h1>
+    <p class="lede">
+      Sentinel is an adaptive friction layer for Union Bank: it stays completely out of the way
+      for the transfers you make every day, and steps in with a plain-language warning the
+      instant something looks like fraud — no PINs, no jargon, no accusations.
+    </p>
+    <div class="hero-cta">
+      <a href="#solution" class="btn btn-primary">How Adaptive Friction works</a>
+      <a href="#how" class="btn btn-ghost">Walk through the flow</a>
+    </div>
+    <p class="hero-note">Built for NIBSS's highest-risk fraud demographic: banking customers aged 40+.</p>
+
+    <div class="demo-strip">
+      <div class="demo-col">
+        <span class="demo-label">Routine transfer · 12:41 PM</span>
+        <div class="demo-row">
+          Amina sends <span class="amt">₦8,000</span> to Chidi's Kitchen (saved recipient)
+          <div class="tag-ok">✓ Sent instantly — zero friction</div>
         </div>
+      </div>
+      <div class="demo-col">
+        <span class="demo-label">Same account · 1:47 AM</span>
+        <div class="demo-row">
+          Unknown recipient requests <span class="amt">₦350,000</span>, minutes after a security change
+          <div class="tag-held">⏸ Held for a 10-second check</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section id="problem">
+    <div class="section-head">
+      <div class="kicker">Why this matters</div>
+      <h2 class="section-title">Fraud controls are failing the people they're meant to protect</h2>
+      <p class="section-sub">
+        Most banks fight fraud with blanket friction — OTPs and lockouts applied evenly to every
+        transaction. That punishes normal customers daily, while still missing the account
+        takeovers that look "technically valid."
+      </p>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-num">40+</div>
+        <div class="stat-label">The customer age group NIBSS identifies as the primary target of fraud</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">1 rule</div>
+        <div class="stat-label">for every customer — today's OTP walls don't adapt to who's actually banking</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">Zero</div>
+        <div class="stat-label">extra steps Sentinel adds to a transaction that matches your normal behavior</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">Seconds</div>
+        <div class="stat-label">to explain and pause a transaction that genuinely looks unlike you</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTION: ADAPTIVE FRICTION -->
+  <section id="solution">
+    <div class="section-head">
+      <div class="kicker">The core idea</div>
+      <h2 class="section-title">Adaptive Friction</h2>
+      <p class="section-sub">
+        Sentinel scores every transaction against each customer's own financial fingerprint —
+        not a generic rulebook. Friction only appears when behavior genuinely deviates.
+      </p>
+    </div>
+    <div class="friction-band">
+      <div class="friction-half calm">
+        <div class="friction-icon calm">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#F6F4EE" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Routine behavior</h3>
+        <p>
+          Same device, familiar recipient, typical amount and hour. The transfer completes
+          instantly — no popups, no PIN re-entry, no OTP. Security stays invisible.
+        </p>
+      </div>
+      <div class="friction-divider"><span>Sentinel scores every transfer</span></div>
+      <div class="friction-half alert">
+        <div class="friction-icon alert">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 9v4m0 4h.01M10.3 3.9L2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z" stroke="#F6F4EE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Anomalous behavior</h3>
+        <p>
+          Large amount, unfamiliar recipient, odd hour, or right after a security change.
+          Sentinel holds the transfer and explains — in plain language — exactly why.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="section-head">
+      <div class="kicker">What we built</div>
+      <h2 class="section-title">Four surfaces, one continuous experience</h2>
+      <p class="section-sub">
+        Everything a customer sees — before, during, and after a decision Sentinel makes on their behalf.
+      </p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-index">01 / Dashboard &amp; Transfers</div>
+        <div class="feature-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 12l9-9 9 9M5 10v10h14V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>The seamless banking hub</h3>
+        <p>Balances, recent activity, and a send-money flow that behaves like any other banking app — because for 99% of transactions, that's all it should be.</p>
+        <div class="example">"Sent, no questions asked." — the entire message a routine transfer gets.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-index">02 / The Shield</div>
+        <div class="feature-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>The fraud intercept screen</h3>
+        <p>When the scoring model returns "held," Sentinel explains the specific anomaly in one sentence and asks a simple yes/no — never an accusation, always a choice.</p>
+        <div class="example">"We noticed a transfer of ₦350,000 at 1:47 AM right after a security change. Is this really you?"</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-index">03 / Scam Check</div>
+        <div class="feature-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Paste-and-verify messages</h3>
+        <p>Customers forward suspicious texts or WhatsApp messages and get back a risk badge, the exact manipulation tactics used, and a concrete next step.</p>
+        <div class="example">⚠️ False urgency · ⚠️ Identity impersonation — flagged in under a second.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-index">04 / Trust Panel</div>
+        <div class="feature-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Radical transparency</h3>
+        <p>Every signal behind the "financial fingerprint" is shown in plain language, with an edit and a delete button — no black box, fully customer-owned.</p>
+        <div class="example">"🕒 Your active hours: 6:00 AM – 10:00 PM" — editable, deletable, always visible.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLOW -->
+  <section>
+    <div class="section-head">
+      <div class="kicker">End to end</div>
+      <h2 class="section-title">What happens when a transfer gets held</h2>
+    </div>
+    <div class="flow">
+      <div class="flow-step">
+        <span class="flow-dot"></span>
+        <span class="flow-time">Step 1</span>
+        <h4>Transaction hits the scoring engine</h4>
+        <p>Every transfer is scored in real time against the customer's own behavioral fingerprint, not a fixed threshold shared across all users.</p>
+      </div>
+      <div class="flow-step">
+        <span class="flow-dot"></span>
+        <span class="flow-time">Step 2</span>
+        <h4>An anomaly returns a "held" status</h4>
+        <p>An LLM turns the raw risk signals into one honest, plain-language sentence — the same explanation a careful human would give.</p>
+      </div>
+      <div class="flow-step">
+        <span class="flow-dot"></span>
+        <span class="flow-time">Step 3</span>
+        <h4>The customer decides</h4>
+        <p>"Yes, it's me" triggers a quick identity check and releases the funds. "No, block this" instantly freezes money movement — no funds ever leave the account.</p>
+      </div>
+      <div class="flow-step">
+        <span class="flow-dot"></span>
+        <span class="flow-time">Step 4</span>
+        <h4>Sentinel explains itself, always</h4>
+        <p>Whatever the outcome, the customer can open the Trust Panel and see exactly what data drove the decision — and remove it if they choose.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST -->
+  <section id="trust">
+    <div class="trust-band">
+      <div>
+        <div class="kicker">No black box</div>
+        <h2 class="section-title" style="margin-bottom:14px;">A fraud model customers are allowed to see inside</h2>
+        <p class="section-sub">
+          Sentinel treats explainability as a feature, not a compliance checkbox. Every behavioral
+          signal used to protect an account is visible, editable, and deletable — live, in the app.
+        </p>
       </div>
       <div>
-        <div class="brand-name">Sentinel</div>
-        <div class="brand-sub">Personalization is Security</div>
+        <div class="trust-chip">🕒&nbsp; Active hours, shown in plain language — not a timestamp log</div>
+        <div class="trust-chip">💰&nbsp; Typical spending range, described the way a person would say it</div>
+        <div class="trust-chip">📍&nbsp; Common banking locations, with a one-tap delete</div>
+        <div class="trust-chip">👥&nbsp; Frequent recipients, fully under the customer's control</div>
       </div>
     </div>
-    <nav class="tabs">
-      <button class="active" data-view="dashboard">Home</button>
-      <button data-view="scam">Scam Check</button>
-      <button data-view="trust">Trust Panel</button>
-    </nav>
-  </header>
-
-  <!-- ================= VIEW A: DASHBOARD ================= -->
-  <section class="view active" id="view-dashboard">
-    <div class="balance-card">
-      <div class="balance-label">Available balance</div>
-      <div class="balance-amount mono" id="balanceAmount">₦412,600.00</div>
-      <div class="balance-actions">
-        <button class="btn btn-primary" id="openSendMoney">Send money</button>
-        <button class="btn btn-light" id="btnScamCheckQuick">Check a message</button>
-      </div>
-    </div>
-
-    <div class="section-title">Recent activity</div>
-    <div class="card" id="txList"></div>
   </section>
 
-  <!-- ================= VIEW C: SCAM CHECK ================= -->
-  <section class="view" id="view-scam">
-    <div class="card">
-      <h2 class="display" style="font-size:21px;margin:0 0 6px;">Received a fishy text or WhatsApp message?</h2>
-      <p style="color:var(--ink-faint);font-size:14px;margin:0 0 16px;">
-        Paste it here to verify safely. Nothing is sent anywhere except Sentinel's scam checker.
-      </p>
-      <textarea class="scam-textarea" id="scamInput"
-        placeholder="e.g. Dear customer, your BVN will be blocked in 24 hours. Click here to reactivate: bit.ly/xyz123"></textarea>
-      <div style="margin-top:14px;">
-        <button class="btn btn-primary" id="scamSubmit">Check this message</button>
-      </div>
-    </div>
-
-    <div class="card" id="scamResult" style="margin-top:18px;display:none;"></div>
-  </section>
-
-  <!-- ================= VIEW D: TRUST PANEL ================= -->
-  <section class="view" id="view-trust">
-    <div class="card">
-      <h2 class="display" style="font-size:21px;margin:0 0 6px;">Your Financial Fingerprint</h2>
-      <p style="color:var(--ink-faint);font-size:14px;margin:0 0 4px;">
-        This is exactly what Sentinel uses to tell your normal behavior from someone pretending to be you.
-        Edit anything that's wrong, or delete it — nothing here is hidden from you.
-      </p>
-      <div id="trustCards" style="margin-top:14px;"></div>
+  <!-- CTA -->
+  <section id="cta">
+    <div class="cta-band">
+      <h2>Watch Adaptive Friction in action</h2>
+      <p>A 90-second walkthrough: one routine transfer that sails through, and one that Sentinel catches — explains — and lets the customer resolve in seconds.</p>
+      <a href="dashboard.html" class="btn" style="background:#F6F4EE;color:#0D2E2C;">Launch the live demo</a>
     </div>
   </section>
-</div>
 
-<!-- Send Money modal -->
-<div class="modal-backdrop" id="sendMoneyBackdrop">
-  <div class="modal">
-    <h3 class="modal-title">Send money</h3>
-    <p class="modal-sub">Transfers to people you already trust go through instantly.</p>
+  <footer>
+    <span>Sentinel — built for HackX 6.0, in partnership with Union Bank &amp; ECX.</span>
+    <span>Adaptive Friction · Radical Transparency · Zero Blame</span>
+  </footer>
 
-    <div id="sendMoneyForm">
-      <div class="field">
-        <label for="amountInput">Amount (₦)</label>
-        <input type="number" id="amountInput" placeholder="8000" />
-      </div>
-      <div class="field">
-        <label for="recipientInput">Recipient account</label>
-        <input type="text" id="recipientInput" placeholder="Chidinma Foods (Vendor)" />
-      </div>
-      <div class="field">
-        <label for="bankInput">Bank</label>
-        <input type="text" id="bankInput" placeholder="OPay" />
-      </div>
-      <div style="display:flex;gap:10px;margin-top:6px;">
-        <button class="btn btn-ghost" id="cancelSendMoney" style="flex:1;">Cancel</button>
-        <button class="btn btn-primary" id="submitSendMoney" style="flex:2;">Send transfer</button>
-      </div>
-    </div>
+</main>
 
-    <div id="sendMoneySuccess" class="success-screen" style="display:none;">
-      <div class="success-badge">✓</div>
-      <h3>Transfer sent</h3>
-      <p id="successDetail">₦8,000 to Chidinma Foods (Vendor) — done.</p>
-      <button class="btn btn-ghost" id="closeSuccess" style="width:100%;">Close</button>
-    </div>
-  </div>
-</div>
-
-<!-- Shield overlay -->
-<div class="shield-backdrop" id="shieldBackdrop">
-  <div class="shield-panel" id="shieldPanel">
-    <!-- populated by JS -->
-  </div>
-</div>
-
-<!-- Demo control panel — visible to team/judges only -->
-<div class="demo-panel" id="demoPanel">
-  <button class="dp-toggle" id="dpToggle">–</button>
-  <div class="dp-title">🎛 Demo control</div>
-  <div class="dp-body">
-    <button id="loadRoutine">▶ Load routine scenario</button>
-    <button id="loadFraud">▶ Load fraud scenario</button>
-    <div class="dp-tag">Pre-fills the Send Money form so the pitch never touches the backend live.</div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-/* =========================================================================
-   SENTINEL FRONTEND — vanilla JS, no build step.
-   Talks to the Flask backend at API_BASE.
-   ========================================================================= */
-const API_BASE = "http://localhost:5000";
-const USER_ID = "amina_001";
-
-const $ = (sel) => document.querySelector(sel);
-const $$ = (sel) => document.querySelectorAll(sel);
-
-let localTxHistory = [
-  { name: "Chidinma Foods", meta: "Today, 9:12 AM", amount: -8000, status: "Success", icon: "🍲" },
-  { name: "Bola Transport Union", meta: "Yesterday, 6:40 PM", amount: -3500, status: "Success", icon: "🚌" },
-  { name: "Wallet top-up", meta: "Mon, 11:02 AM", amount: 50000, status: "Success", icon: "💳" },
-];
-
-/* ---------- Tabs ---------- */
-$$("nav.tabs button").forEach(btn => {
-  btn.addEventListener("click", () => {
-    $$("nav.tabs button").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    $$("section.view").forEach(v => v.classList.remove("active"));
-    $("#view-" + btn.dataset.view).classList.add("active");
-  });
-});
-$("#btnScamCheckQuick").addEventListener("click", () => $('nav.tabs button[data-view="scam"]').click());
-
-/* ---------- Toast ---------- */
-function showToast(msg) {
-  const t = $("#toast");
-  t.textContent = msg;
-  t.classList.add("show");
-  setTimeout(() => t.classList.remove("show"), 2400);
-}
-
-/* ---------- Header trust ring ---------- */
-function setHeaderRing(score) {
-  const ring = $("#headerRing");
-  const fill = $("#headerRingFill");
-  const circumference = 100.5;
-  const offset = circumference * (1 - score);
-  fill.style.strokeDashoffset = offset;
-  ring.classList.toggle("alert", score > 0.75);
-}
-
-/* ---------- Render transaction list ---------- */
-function renderTxList() {
-  const list = $("#txList");
-  if (localTxHistory.length === 0) {
-    list.innerHTML = '<div class="empty-note">No activity yet.</div>';
-    return;
-  }
-  list.innerHTML = localTxHistory.map(tx => `
-    <div class="tx-row">
-      <div class="tx-left">
-        <div class="tx-icon">${tx.icon}</div>
-        <div>
-          <div class="tx-name">${tx.name}<span class="status-pill status-${tx.status}">${tx.status}</span></div>
-          <div class="tx-meta">${tx.meta}</div>
-        </div>
-      </div>
-      <div class="tx-amt" style="color:${tx.amount < 0 ? 'var(--ink)' : 'var(--emerald)'}">
-        ${tx.amount < 0 ? '−' : '+'}₦${Math.abs(tx.amount).toLocaleString()}
-      </div>
-    </div>
-  `).join("");
-}
-renderTxList();
-
-/* ---------- Send Money modal ---------- */
-const sendMoneyBackdrop = $("#sendMoneyBackdrop");
-function openSendMoney() {
-  $("#sendMoneyForm").style.display = "block";
-  $("#sendMoneySuccess").style.display = "none";
-  sendMoneyBackdrop.classList.add("open");
-}
-function closeSendMoney() { sendMoneyBackdrop.classList.remove("open"); }
-$("#openSendMoney").addEventListener("click", openSendMoney);
-$("#cancelSendMoney").addEventListener("click", closeSendMoney);
-$("#closeSuccess").addEventListener("click", closeSendMoney);
-sendMoneyBackdrop.addEventListener("click", (e) => { if (e.target === sendMoneyBackdrop) closeSendMoney(); });
-
-async function submitTransfer() {
-  const amount = parseFloat($("#amountInput").value);
-  const recipient = $("#recipientInput").value.trim();
-  const bank = $("#bankInput").value.trim();
-  const timestampOverride = $("#sendMoneyForm").dataset.demoTimestamp || null;
-
-  if (!amount || !recipient || !bank) {
-    showToast("Fill in amount, recipient, and bank.");
-    return;
-  }
-
-  const payload = {
-    user_id: USER_ID,
-    amount,
-    recipient_account: recipient,
-    recipient_bank: bank,
-  };
-  if (timestampOverride) payload.timestamp = timestampOverride;
-
-  try {
-    const res = await fetch(`${API_BASE}/api/v1/transactions/score`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    const data = await res.json();
-    setHeaderRing(data.anomaly_score ?? 0);
-
-    if (data.status === "Held") {
-      closeSendMoney();
-      openShield(data, { amount, recipient, bank });
-    } else {
-      localTxHistory.unshift({
-        name: recipient, meta: "Just now", amount: -amount, status: "Success", icon: "💸",
-      });
-      renderTxList();
-      $("#sendMoneyForm").style.display = "none";
-      $("#sendMoneySuccess").style.display = "block";
-      $("#successDetail").textContent = `₦${amount.toLocaleString()} to ${recipient} — done.`;
-    }
-  } catch (err) {
-    showToast("Couldn't reach the Sentinel backend — is it running on :5000?");
-  }
-}
-$("#submitSendMoney").addEventListener("click", submitTransfer);
-
-/* ---------- Shield overlay (View B) ---------- */
-const shieldBackdrop = $("#shieldBackdrop");
-let currentHeldTx = null;
-
-function openShield(scoreData, txContext) {
-  currentHeldTx = { ...scoreData, ...txContext };
-  const flagLabels = {
-    ERR_AMOUNT_DEVIATION: "Unusual amount",
-    ERR_UNUSUAL_HOUR: "Unusual time",
-    ERR_NEW_RECIPIENT: "New recipient",
-    ERR_HIGH_VELOCITY: "Rapid transfers",
-  };
-  const flags = (scoreData.reason_flags || []).map(f => `<span>${flagLabels[f] || f}</span>`).join("");
-
-  $("#shieldPanel").innerHTML = `
-    <div class="shield-icon">🛡️</div>
-    <h2>We paused this transfer to protect you</h2>
-    <div class="shield-msg">${scoreData.explanation}</div>
-    <div class="shield-flags">${flags}</div>
-    <div class="shield-actions">
-      <button class="btn btn-primary" id="shieldConfirm">Yes, it's me — send it</button>
-      <button class="btn btn-outline-amber" id="shieldBlock">No, block this!</button>
-    </div>
-  `;
-  shieldBackdrop.classList.add("open");
-  $("#shieldConfirm").addEventListener("click", () => resolveShield("confirm"));
-  $("#shieldBlock").addEventListener("click", () => resolveShield("block"));
-}
-
-async function resolveShield(decision) {
-  try {
-    const res = await fetch(`${API_BASE}/api/v1/transactions/${currentHeldTx.transaction_id}/resolve`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ decision }),
-    });
-    const data = await res.json();
-
-    if (decision === "confirm") {
-      localTxHistory.unshift({
-        name: currentHeldTx.recipient, meta: "Just now", amount: -currentHeldTx.amount,
-        status: "Success", icon: "💸",
-      });
-      renderTxList();
-      setHeaderRing(0.1);
-      showShieldResolution("✓", "var(--emerald-dim)", "var(--emerald)", "Transfer sent",
-        "Thanks for confirming — your money's on its way.");
-    } else {
-      localTxHistory.unshift({
-        name: currentHeldTx.recipient, meta: "Just now", amount: -currentHeldTx.amount,
-        status: "Failed", icon: "🛑",
-      });
-      renderTxList();
-      setHeaderRing(0.05);
-      showShieldResolution("🔒", "var(--amber-dim)", "var(--amber)", "Transfer blocked",
-        data.message || "We've frozen this transfer and your money is safe.");
-    }
-  } catch (err) {
-    showToast("Couldn't reach the Sentinel backend.");
-  }
-}
-
-function showShieldResolution(icon, bg, color, title, msg) {
-  $("#shieldPanel").innerHTML = `
-    <div class="resolution">
-      <div class="icon" style="background:${bg};color:${color};">${icon}</div>
-      <h2 style="margin-bottom:8px;">${title}</h2>
-      <p style="color:var(--ink-faint);font-size:14.5px;margin-bottom:20px;">${msg}</p>
-      <button class="btn btn-ghost" id="closeShield" style="width:100%;">Close</button>
-    </div>
-  `;
-  $("#closeShield").addEventListener("click", () => shieldBackdrop.classList.remove("open"));
-}
-
-/* ---------- Scam Check (View C) ---------- */
-$("#scamSubmit").addEventListener("click", async () => {
-  const text = $("#scamInput").value.trim();
-  if (!text) { showToast("Paste a message first."); return; }
-
-  const resultBox = $("#scamResult");
-  resultBox.style.display = "block";
-  resultBox.innerHTML = '<div class="empty-note">Checking…</div>';
-
-  try {
-    const res = await fetch(`${API_BASE}/api/v1/scam-check`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message_text: text }),
-    });
-    const data = await res.json();
-    renderScamResult(data);
-  } catch (err) {
-    resultBox.innerHTML = '<div class="empty-note">Couldn\'t reach the Sentinel backend.</div>';
-  }
-});
-
-function renderScamResult(data) {
-  const riskIcon = { High: "⚠️", Medium: "⚠️", Low: "✅" }[data.risk_level] || "ℹ️";
-  const tactics = (data.tactics_detected || []).map(t => `
-    <div class="tactic">
-      <div class="warn">⚠️</div>
-      <div><h4>${t.label}</h4><p>${t.explanation}</p></div>
-    </div>
-  `).join("") || '<div class="empty-note">No manipulation tactics detected.</div>';
-
-  const actions = (data.action_plan || []).map(a => `<li>${a}</li>`).join("");
-
-  $("#scamResult").innerHTML = `
-    <div class="risk-badge risk-${data.risk_level}">${riskIcon} ${data.risk_level} risk</div>
-    <div>${tactics}</div>
-    <div class="action-plan">
-      <h4>What to do</h4>
-      <ul>${actions}</ul>
-    </div>
-  `;
-}
-
-/* ---------- Trust Panel (View D) ---------- */
-async function loadTrustPanel() {
-  const container = $("#trustCards");
-  container.innerHTML = '<div class="empty-note">Loading your fingerprint…</div>';
-  try {
-    const res = await fetch(`${API_BASE}/api/v1/trust-panel?user_id=${USER_ID}`);
-    const data = await res.json();
-    renderTrustCards(data.cards);
-  } catch (err) {
-    container.innerHTML = '<div class="empty-note">Couldn\'t reach the Sentinel backend.</div>';
-  }
-}
-
-function renderTrustCards(cards) {
-  const container = $("#trustCards");
-  container.innerHTML = cards.map(c => `
-    <div class="trust-card" data-id="${c.id}">
-      <div class="trust-left">
-        <div class="trust-icon">${c.icon}</div>
-        <div>
-          <div class="trust-label">${c.label}</div>
-          <div class="trust-value" data-role="value">${c.value}</div>
-        </div>
-      </div>
-      <div class="trust-actions">
-        <button class="icon-btn" title="Edit" data-action="edit" data-id="${c.id}">✎</button>
-        <button class="icon-btn danger" title="Delete from profile" data-action="delete" data-id="${c.id}">🗑</button>
-      </div>
-    </div>
-  `).join("");
-
-  container.querySelectorAll('[data-action="edit"]').forEach(btn => {
-    btn.addEventListener("click", () => toggleEdit(btn.dataset.id));
-  });
-  container.querySelectorAll('[data-action="delete"]').forEach(btn => {
-    btn.addEventListener("click", () => deleteField(btn.dataset.id));
-  });
-}
-
-function toggleEdit(cardId) {
-  const card = $(`.trust-card[data-id="${cardId}"]`);
-  const valueEl = card.querySelector('[data-role="value"]');
-  if (card.dataset.editing === "true") return;
-  card.dataset.editing = "true";
-  const current = valueEl.textContent;
-  valueEl.innerHTML = `<input type="text" value="${current}" />`;
-  const input = valueEl.querySelector("input");
-  input.focus();
-  input.addEventListener("keydown", (e) => { if (e.key === "Enter") saveEdit(cardId, input.value); });
-  input.addEventListener("blur", () => saveEdit(cardId, input.value));
-}
-
-async function saveEdit(cardId, newValue) {
-  const card = $(`.trust-card[data-id="${cardId}"]`);
-  card.dataset.editing = "false";
-  const valueEl = card.querySelector('[data-role="value"]');
-  valueEl.textContent = newValue;
-
-  // Best-effort mapping to backend fields; the PUT endpoint accepts partial updates.
-  const body = { user_id: USER_ID };
-  if (cardId === "frequent_recipients") {
-    body.whitelisted_recipients = newValue.split(",").map(s => s.trim()).filter(Boolean);
-  }
-  try {
-    await fetch(`${API_BASE}/api/v1/trust-panel`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    showToast("Saved.");
-  } catch (err) { showToast("Couldn't save — backend unreachable."); }
-}
-
-async function deleteField(cardId) {
-  try {
-    await fetch(`${API_BASE}/api/v1/trust-panel`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_id: USER_ID, field: cardId }),
-    });
-    showToast("Cleared from your profile.");
-    loadTrustPanel();
-  } catch (err) { showToast("Couldn't reach the Sentinel backend."); }
-}
-
-$('nav.tabs button[data-view="trust"]').addEventListener("click", loadTrustPanel);
-
-/* ---------- Demo control panel ---------- */
-$("#dpToggle").addEventListener("click", () => {
-  $("#demoPanel").classList.toggle("collapsed");
-  $("#dpToggle").textContent = $("#demoPanel").classList.contains("collapsed") ? "+" : "–";
-});
-
-async function loadScenario(scenario) {
-  try {
-    const res = await fetch(`${API_BASE}/api/v1/demo/scenario`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ scenario }),
-    });
-    const data = await res.json();
-    const p = data.payload;
-    $("#amountInput").value = p.amount;
-    $("#recipientInput").value = p.recipient_account;
-    $("#bankInput").value = p.recipient_bank;
-    $("#sendMoneyForm").dataset.demoTimestamp = p.timestamp;
-    $('nav.tabs button[data-view="dashboard"]').click();
-    openSendMoney();
-    showToast(scenario === "routine" ? "Routine scenario loaded" : "Fraud scenario loaded");
-  } catch (err) {
-    showToast("Couldn't reach the Sentinel backend — is it running on :5000?");
-  }
-}
-$("#loadRoutine").addEventListener("click", () => loadScenario("routine"));
-$("#loadFraud").addEventListener("click", () => loadScenario("fraud"));
-
-/* ---------- Init ---------- */
-setHeaderRing(0.1);
-</script>
 </body>
 </html>
